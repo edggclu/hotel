@@ -59,4 +59,13 @@ public class ReservasController {
         em.getTransaction().commit();
         em.close();
     }
+
+    public void eliminar(Long id) {
+        EntityManager em = JPAUtils.getEntityManager();
+        reservaDAO = new ReservaDAO(em);
+        em.getTransaction().begin();
+        reservaDAO.eliminar(id, em);
+        em.getTransaction().commit();
+        em.close();
+    }
 }

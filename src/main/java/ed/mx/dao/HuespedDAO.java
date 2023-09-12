@@ -8,7 +8,6 @@ import ed.mx.modelo.Usuario;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.sql.Date;
-import java.sql.SQLException;
 import java.util.List;
 
 public class HuespedDAO {
@@ -54,5 +53,10 @@ public class HuespedDAO {
         huesped.setNacionalidad(nacionalidad);
         huesped.setTelefono(telefono);
         em.merge(huesped);
+    }
+
+    public void eliminar(Long id, EntityManager em) {
+        Huesped huesped = em.find(Huesped.class,id);
+        em.remove(huesped);
     }
 }

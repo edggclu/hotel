@@ -1,6 +1,7 @@
 package ed.mx.dao;
 
 import ed.mx.controller.UsuarioController;
+import ed.mx.modelo.Huesped;
 import ed.mx.modelo.Reserva;
 import ed.mx.modelo.Usuario;
 
@@ -47,5 +48,11 @@ public class ReservaDAO {
         reserva.setFechaS(fechaS);
         reserva.setValor(valor);
         em.merge(reserva);
+    }
+
+    public void eliminar(Long id, EntityManager em) {
+        Reserva reserva = em.find(Reserva.class,id);
+        Huesped huesped = em.find(Huesped.class,reserva.getHuesped().getId());
+        em.remove(huesped);
     }
 }

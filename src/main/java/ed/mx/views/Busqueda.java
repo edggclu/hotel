@@ -210,14 +210,14 @@ public class Busqueda extends JFrame {
         btnexit.add(labelExit);
 
         JLabel currentUser = new JLabel(usuario);
-        currentUser.setBounds(780,0,53,36);
+        currentUser.setBounds(780, 0, 53, 36);
         currentUser.setLayout(null);
         currentUser.setHorizontalAlignment(SwingConstants.CENTER);
-        currentUser.setFont(new Font ("Roboto", Font.PLAIN, 14));
+        currentUser.setFont(new Font("Roboto", Font.PLAIN, 14));
         header.add(currentUser);
 
         JLabel imgUser = new JLabel("");
-        imgUser.setBounds(720,0,34,34);
+        imgUser.setBounds(720, 0, 34, 34);
         imgUser.setHorizontalAlignment(SwingConstants.CENTER);
 //        imgUser.setBorder();
         imgUser.setIcon(new ImageIcon(Busqueda.class.getResource("/imagenes/login.png")));
@@ -273,16 +273,20 @@ public class Busqueda extends JFrame {
         btnEditar.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(panel.getSelectedIndex() == indexHuespedes){
+                if (panel.getSelectedIndex() == indexHuespedes) {
                     modificarHuesped(tbHuespedes, modeloHuesped);
-                } else if(panel.getSelectedIndex() == indexReservas){
+                } else if (panel.getSelectedIndex() == indexReservas) {
                     modificarReserva();
                 }
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-
+                if (panel.getSelectedIndex() == indexHuespedes) {
+                    modificarHuesped(tbHuespedes, modeloHuesped);
+                } else if (panel.getSelectedIndex() == indexReservas) {
+                    modificarReserva();
+                }
             }
 
 
@@ -315,6 +319,40 @@ public class Busqueda extends JFrame {
         btnEditar.add(lblEditar);
 
         JPanel btnEliminar = new JPanel();
+        btnEliminar.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (panel.getSelectedIndex() == indexHuespedes) {
+                    eliminarHuesped();
+                } else if (panel.getSelectedIndex() == indexReservas) {
+                    eliminarReserva();
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (panel.getSelectedIndex() == indexHuespedes) {
+                    eliminarHuesped();
+                } else if (panel.getSelectedIndex() == indexReservas) {
+                    eliminarReserva();
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
         btnEliminar.setLayout(null);
         btnEliminar.setBackground(new Color(12, 138, 199));
         btnEliminar.setBounds(767, 508, 122, 35);
@@ -418,6 +456,7 @@ public class Busqueda extends JFrame {
     private boolean tieneFilaElegida(JTable tabla) {
         return tabla.getSelectedRowCount() == 0 || tabla.getSelectedColumnCount() == 0;
     }
+
     private void modificarHuesped(JTable table, DefaultTableModel modelo) {
         if (tieneFilaElegida(table)) {
             JOptionPane.showMessageDialog(this, "Por favor, elije un item");
@@ -439,19 +478,19 @@ public class Busqueda extends JFrame {
                         } catch (NullPointerException e) {
                             JOptionPane.showMessageDialog(this, "Usuario No encontrado");
                         }
-                    } catch (IllegalArgumentException e){
+                    } catch (IllegalArgumentException e) {
                         JOptionPane.showMessageDialog(this, "Ingresa una Fecha valida");
                     }
                 }, () -> System.out.println("Elige pa"));
     }
 
-    private void modificarReserva(){
+    private void modificarReserva() {
         if (tieneFilaElegida(tbReservas)) {
             JOptionPane.showMessageDialog(this, "Por favor, elije un item");
             return;
         }
         Optional.ofNullable(modelo.getValueAt(tbReservas.getSelectedRow(), tbReservas.getSelectedColumn()))
-                .ifPresentOrElse(fila->{
+                .ifPresentOrElse(fila -> {
                     try {
                         Long id = Long.valueOf(modelo.getValueAt(tbReservas.getSelectedRow(), 0).toString());
                         Date fechaE = java.sql.Date.valueOf(modelo.getValueAt(tbReservas.getSelectedRow(), 1).toString());
@@ -471,7 +510,7 @@ public class Busqueda extends JFrame {
                         } else {
                             JOptionPane.showMessageDialog(this, "Ingresa una Fecha valida");
                         }
-                    }catch (IllegalArgumentException e){
+                    } catch (IllegalArgumentException e) {
                         JOptionPane.showMessageDialog(this, "Ingresa Datos validos");
                     }
 
@@ -480,6 +519,50 @@ public class Busqueda extends JFrame {
 
     }
 
+    private void eliminarReserva() {
+        int mensaje = JOptionPane.showConfirmDialog(this, "Seguro que quieres Eliminar este campo");
+        if (mensaje == 0) {
+            if (tieneFilaElegida(tbReservas)) {
+                JOptionPane.showMessageDialog(this, "Por favor, elije un item");
+                return;
+            }
+            Optional.ofNullable(modelo.getValueAt(tbReservas.getSelectedRow(), tbReservas.getSelectedColumn()))
+                    .ifPresentOrElse(fila -> {
+
+                        Long id = Long.valueOf(modelo.getValueAt(tbReservas.getSelectedRow(), 0).toString());
+
+                        try {
+                            rc.eliminar(id);
+                            JOptionPane.showMessageDialog(this, "Reserva " + id + " Eliminada con Exito\n Junto a su Huesped");
+                        } catch (Exception ignored) {
+
+                        }
+                    }, System.out::println);
+        }
+    }
+    private void eliminarHuesped() {
+        int mensaje = JOptionPane.showConfirmDialog(this, "Seguro que quieres Eliminar este campo");
+        if (mensaje == 0) {
+            if (tieneFilaElegida(tbHuespedes)) {
+                JOptionPane.showMessageDialog(this, "Por favor, elije un item");
+                return;
+            }
+            Optional.ofNullable(modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), tbHuespedes.getSelectedColumn()))
+                    .ifPresentOrElse(fila -> {
+
+                        Long id = Long.valueOf(modeloHuesped.getValueAt(tbHuespedes.getSelectedRow(), 0).toString());
+
+                        try {
+                            hc.eliminar(id);
+                            JOptionPane.showMessageDialog(this, "Huesped " + id + " Eliminado con Exito\n Junto a su reserva");
+                        } catch (Exception ignored) {
+
+                        }
+                    }, System.out::println);
+        } else {
+
+        }
+    }
 
     private void eventoTeclado() {
         KeyListener event = new KeyListener() {
@@ -513,4 +596,5 @@ public class Busqueda extends JFrame {
 
     }
 }
+
 
