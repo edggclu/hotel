@@ -16,6 +16,8 @@ public class MenuUsuario extends JFrame {
 	int xMouse, yMouse;
 	private JLabel labelExit;
 	private JLabel labelRegistro;
+	private String usuario;
+
 
 	/**
 	 * Launch the application.
@@ -24,7 +26,7 @@ public class MenuUsuario extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MenuUsuario frame = new MenuUsuario();
+					MenuUsuario frame = new MenuUsuario("admin");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -36,7 +38,8 @@ public class MenuUsuario extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MenuUsuario() {
+	public MenuUsuario(String usuario) {
+		this.usuario = usuario;
 		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuUsuario.class.getResource("/imagenes/aH-40px.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 944, 609);
@@ -86,7 +89,7 @@ public class MenuUsuario extends JFrame {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ReservasView reservas = new ReservasView();
+				ReservasView reservas = new ReservasView(usuario);
 				reservas.setVisible(true);
 				dispose();
 			}
@@ -116,7 +119,7 @@ public class MenuUsuario extends JFrame {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Busqueda busqueda = new Busqueda();
+				Busqueda busqueda = new Busqueda(usuario);
 				busqueda.setVisible(true);
 				dispose();
 			}
@@ -170,6 +173,25 @@ public class MenuUsuario extends JFrame {
 		btnexit.add(labelExit);
 		labelExit.setHorizontalAlignment(SwingConstants.CENTER);
 		labelExit.setFont(new Font("Roboto", Font.PLAIN, 18));
+
+		JLabel currentUser = new JLabel(usuario);
+		currentUser.setBounds(830,0,53,36);
+		currentUser.setLayout(null);
+		currentUser.setHorizontalAlignment(SwingConstants.CENTER);
+		currentUser.setFont(new Font ("Roboto", Font.PLAIN, 14));
+		header.add(currentUser);
+
+		JPanel btnImg = new JPanel();
+		btnImg.setBounds(790,0,34,34);
+		btnImg.setLayout(null);
+		btnImg.setBackground(SystemColor.window);
+		header.add(btnImg);
+		JLabel imgUser = new JLabel("");
+		imgUser.setBounds(0,0,34,34);
+		imgUser.setHorizontalAlignment(SwingConstants.CENTER);
+		imgUser.setIcon(new ImageIcon(MenuUsuario.class.getResource("/imagenes/login.png")));
+		btnImg.add(imgUser);
+
 
 	    JPanel panelFecha = new JPanel();
 	    panelFecha.setBackground(new Color(118, 187, 223));

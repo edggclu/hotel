@@ -56,4 +56,11 @@ public class UsuarioDAO {
         }
 
     }
+
+    public Usuario buscarUsuarioParaReserva(String usuario) {
+        em.getTransaction().begin();
+        Usuario usuarioEncontrado = em.find(Usuario.class, usuario);
+        em.close();
+        return usuarioEncontrado;
+    }
 }

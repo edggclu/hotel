@@ -13,9 +13,11 @@ import javax.swing.JTextField;
 
 import com.toedter.calendar.JDateChooser;
 import ed.mx.controller.ReservasController;
+import ed.mx.controller.UsuarioController;
 import ed.mx.dao.ReservaDAO;
 import ed.mx.modelo.Huesped;
 import ed.mx.modelo.Reserva;
+import ed.mx.modelo.Usuario;
 
 import java.awt.Font;
 import javax.swing.JComboBox;
@@ -47,6 +49,7 @@ public class ReservasView extends JFrame {
     private JLabel labelExit;
     private JLabel labelAtras;
     private String valorTotal;
+    private final String usuario;
 
     /**
      * Launch the application.
@@ -55,7 +58,7 @@ public class ReservasView extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    ReservasView frame = new ReservasView();
+                    ReservasView frame = new ReservasView("A");
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -67,8 +70,9 @@ public class ReservasView extends JFrame {
     /**
      * Create the frame.
      */
-    public ReservasView() {
+    public ReservasView(String usuario) {
         super("Reserva");
+        this.usuario = usuario;
         setIconImage(Toolkit.getDefaultToolkit().getImage(ReservasView.class.getResource("/imagenes/aH-40px.png")));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 910, 560);
@@ -220,8 +224,8 @@ public class ReservasView extends JFrame {
         btnAtras.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                MenuUsuario usuario = new MenuUsuario();
-                usuario.setVisible(true);
+                MenuUsuario user = new MenuUsuario(usuario);
+                user.setVisible(true);
                 dispose();
             }
 
@@ -338,6 +342,7 @@ public class ReservasView extends JFrame {
                 if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {
                     if(!Objects.equals(txtValor.getText(), "---------")){
                         guardarReserva();
+                        dispose();
                     }
 
                 } else {
@@ -354,15 +359,18 @@ public class ReservasView extends JFrame {
 
     private void guardarReserva() {
         ReservasController reservasController = new ReservasController();
+        UsuarioController usuarioController = new UsuarioController();
+        Usuario usuarioEncontrado  = usuarioController.buscarUsuario(usuario);
         String FechaE = ((JTextField) txtFechaEntrada.getDateEditor().getUiComponent()).getText();
         String FechaS = ((JTextField) txtFechaSalida.getDateEditor().getUiComponent()).getText();
         Reserva nuevaReserva = new Reserva(
                 java.sql.Date.valueOf(FechaE),
                 java.sql.Date.valueOf(FechaS),
                 (new BigDecimal(Integer.parseInt(valorTotal))),
-                (String) txtFormaPago.getSelectedItem());
+                (String) txtFormaPago.getSelectedItem(),
+                usuarioEncontrado);
         reservasController.formularioParaGuardar(nuevaReserva);
-        RegistroHuesped registro = new RegistroHuesped(nuevaReserva, reservasController.getEm());
+        RegistroHuesped registro = new RegistroHuesped(nuevaReserva, reservasController.getEm(), usuario);
         registro.setVisible(true);
 
     }

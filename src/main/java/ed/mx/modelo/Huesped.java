@@ -14,7 +14,7 @@ public class Huesped {
     private String nombre;
     private String apellido;
     private Date fechaNacimiento;
-    private String Nacionalidad;
+    private String nacionalidad;
     private String telefono;
     @OneToOne(cascade = CascadeType.ALL)
 //    @MapsId
@@ -29,7 +29,7 @@ public class Huesped {
         this.nombre = nombre;
         this.apellido = apellido;
         this.fechaNacimiento = fechaNacimiento;
-        this.Nacionalidad = nacionalidad;
+        this.nacionalidad = nacionalidad;
         this.telefono = telefono;
     }
 
@@ -62,11 +62,11 @@ public class Huesped {
     }
 
     public String getNacionalidad() {
-        return Nacionalidad;
+        return nacionalidad;
     }
 
     public void setNacionalidad(String nacionalidad) {
-        Nacionalidad = nacionalidad;
+        this.nacionalidad = nacionalidad;
     }
 
     public String getTelefono() {

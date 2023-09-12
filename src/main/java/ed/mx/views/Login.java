@@ -254,7 +254,7 @@ public class Login extends JFrame {
 
 			UsuarioController usuarioController = new UsuarioController(this);
 			if (usuarioController.login(user, password)) {
-				MenuUsuario v1 = new MenuUsuario();
+				MenuUsuario v1 = new MenuUsuario(user);
 				v1.setVisible(true);
 				dispose();
 			}

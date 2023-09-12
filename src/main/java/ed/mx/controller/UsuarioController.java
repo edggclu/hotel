@@ -13,6 +13,9 @@ public class UsuarioController {
     private RegistroDeUsuario registroDeUsuario;
     private Login login;
 
+    public UsuarioController(){
+
+    }
     public UsuarioController(RegistroDeUsuario registroDeUsuario) {
         this.registroDeUsuario = registroDeUsuario;
     }
@@ -35,6 +38,13 @@ public class UsuarioController {
         } else {
             return false;
         }
+    }
+
+    public Usuario buscarUsuario(String usuario){
+        EntityManager em = JPAUtils.getEntityManager();
+        usuarioDAO = new UsuarioDAO(em);
+        return usuarioDAO.buscarUsuarioParaReserva(usuario);
+
     }
 }
 

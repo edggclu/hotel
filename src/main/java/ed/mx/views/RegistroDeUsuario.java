@@ -5,9 +5,7 @@ import ed.mx.controller.UsuarioController;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 
 public class RegistroDeUsuario extends JFrame {
 
@@ -132,6 +130,8 @@ public class RegistroDeUsuario extends JFrame {
         txtContrasena = new JPasswordField();
         txtContrasena.setText("");
         txtUsuario.setForeground(Color.black);
+        maximoDeCaracteres(txtUsuario);
+        maximoDeCaracteres(txtContrasena);
 
 
         txtContrasena.setFont(new Font("Roboto", Font.PLAIN, 16));
@@ -246,13 +246,39 @@ public class RegistroDeUsuario extends JFrame {
         String User = txtUsuario.getText();
         String Password = new String(txtContrasena.getPassword());
 
-        if (!User.isEmpty() && !Password.isEmpty()) {
+        if (!User.isEmpty() &&
+                !Password.isEmpty() &&
+                User.length() < 26 &&
+                Password.length() < 26) {
 //            JOptionPane.showMessageDialog(this, "Registrado Con Exito");
             UsuarioController usuarioController = new UsuarioController(this);
             usuarioController.guardar(User, Password);
         } else {
             JOptionPane.showMessageDialog(this, "Usuario o Contraseña no válidos");
         }
+    }
+
+    private void maximoDeCaracteres(JTextField textfield) {
+        KeyListener event = new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (textfield.getText().length() == 25 || textfield.getText().length() > 25) {
+                    e.consume();
+                }
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+
+        };
+        textfield.addKeyListener(event);
     }
 
     private void headerMousePressed(MouseEvent evt) {

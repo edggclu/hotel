@@ -1,9 +1,11 @@
 package ed.mx.pruebas;
 
+import ed.mx.controller.UsuarioController;
 import ed.mx.dao.HuespedDAO;
 import ed.mx.dao.ReservaDAO;
 import ed.mx.modelo.Huesped;
 import ed.mx.modelo.Reserva;
+import ed.mx.modelo.Usuario;
 import ed.mx.utils.JPAUtils;
 
 import javax.persistence.Entity;
@@ -12,11 +14,13 @@ import java.math.BigDecimal;
 
 public class Prueba1 {
     public static void main(String[] args) {
+        UsuarioController usuarioController = new UsuarioController();
+        Usuario encontrado = usuarioController.buscarUsuario("admin");
         Reserva reserva = new Reserva(
                 java.sql.Date.valueOf("2023-06-09"),
                 java.sql.Date.valueOf("2023-07-09"),
                 new BigDecimal(455),
-                "Tarjeta");
+                "Tarjeta", encontrado);
 
                 Huesped diego = new  Huesped("diego",
                 "Tilines",
@@ -43,6 +47,7 @@ public class Prueba1 {
         em.close();
 
         System.out.println(diego.getIdReserva());
+        System.out.println(reserva.getUsuario().getUser());
 
 
 

@@ -18,11 +18,16 @@ public class Reserva {
     @OneToOne(mappedBy = "idReserva", fetch = FetchType.LAZY)
     private Huesped huesped;
 
-    public Reserva(Date fechaE, Date fechaS, BigDecimal valor, String forma_de_pago) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario")
+    private Usuario usuario;
+
+    public Reserva(Date fechaE, Date fechaS, BigDecimal valor, String forma_de_pago, Usuario usuario) {
         this.fechaE = fechaE;
         this.fechaS = fechaS;
         this.valor = ((valor));
         this.forma_de_pago = forma_de_pago;
+        this.usuario = usuario;
 
     }
 
@@ -88,5 +93,9 @@ public class Reserva {
 
     public String getHuespedString() {
         return (huesped.getNombre() + "   id: " + huesped.getId());
+    }
+
+    public Usuario getUsuario() {
+        return this.usuario;
     }
 }

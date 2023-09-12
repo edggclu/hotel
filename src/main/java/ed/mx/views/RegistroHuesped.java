@@ -10,18 +10,18 @@ import com.toedter.calendar.JDateChooser;
 import ed.mx.controller.HuespedesController;
 import ed.mx.modelo.Huesped;
 import ed.mx.modelo.Reserva;
+import ed.mx.modelo.Usuario;
 
 import java.awt.Font;
 import java.awt.SystemColor;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.text.Format;
 import java.awt.Toolkit;
 
 @SuppressWarnings("serial")
 public class RegistroHuesped extends JFrame {
 
+    private String usuario;
     private JPanel contentPane;
     private JTextField txtNombre;
     private JTextField txtApellido;
@@ -57,9 +57,10 @@ public class RegistroHuesped extends JFrame {
     /**
      * Create the frame.
      */
-    public RegistroHuesped(Reserva reservaForHuesped, EntityManager em) {
+    public RegistroHuesped(Reserva reservaForHuesped, EntityManager em, String usuario) {
         this.reservaForHuesped = reservaForHuesped;
         this.em = em;
+        this.usuario = usuario;
 
         setIconImage(Toolkit.getDefaultToolkit().getImage(RegistroHuesped.class.getResource("/imagenes/lOGO-50PX.png")));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -98,7 +99,7 @@ public class RegistroHuesped extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 em.close();
-                ReservasView reservas = new ReservasView();
+                ReservasView reservas = new ReservasView(usuario);
                 reservas.setVisible(true);
                 dispose();
             }
@@ -195,6 +196,7 @@ public class RegistroHuesped extends JFrame {
         txtTelefono.setBackground(Color.WHITE);
         txtTelefono.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         contentPane.add(txtTelefono);
+        eventoTeclado();
 
         JLabel lblTitulo = new JLabel("REGISTRO HUÉSPED");
         lblTitulo.setBounds(606, 55, 234, 42);
@@ -341,7 +343,8 @@ public class RegistroHuesped extends JFrame {
                 telefono);
         nuevoHuesped.setIdReserva(reservaForHuesped);
         huespedesController.formularioCompleto(nuevoHuesped, reservaForHuesped, em);
-        JOptionPane.showMessageDialog(this,"Huesped registrado!");
+        Exito exito = new Exito(usuario);
+        exito.setVisible(true);
     }
 
     private boolean validarCampos() {
@@ -371,6 +374,37 @@ public class RegistroHuesped extends JFrame {
         int x = evt.getXOnScreen();
         int y = evt.getYOnScreen();
         this.setLocation(x - xMouse, y - yMouse);
+    }
+    private void eventoTeclado() {
+        KeyListener event = new KeyListener() {
+
+            @Override
+            public void keyTyped(KeyEvent evt) {
+                int character = evt.getKeyChar();
+                if ((!(character >= 48 && character <= 57))
+                        && (character != KeyEvent.VK_BACK_SPACE)
+                        && (character != '.' || txtTelefono.getText().contains("."))) {
+                    evt.consume();
+                }
+            }
+
+            @Override
+            public void keyPressed(KeyEvent evt) {
+                int character = evt.getKeyChar();
+                if ((!(character >= 48 && character <= 57))
+                        && (character != KeyEvent.VK_BACK_SPACE)
+                        && (character != '.' || txtTelefono.getText().contains("."))) {
+                    evt.consume();
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+
+        };
+        txtTelefono.addKeyListener(event);
+
     }
 
 }

@@ -20,13 +20,14 @@ import java.awt.Toolkit;
 public class Exito extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
+	private String usuario;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			Exito dialog = new Exito();
+			Exito dialog = new Exito("a");
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -37,7 +38,8 @@ public class Exito extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public Exito() {
+	public Exito(String usuario) {
+		this.usuario = usuario;
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Exito.class.getResource("/imagenes/aH-40px.png")));
 		setBounds(100, 100, 394, 226);
 		getContentPane().setLayout(new BorderLayout());
@@ -68,8 +70,8 @@ public class Exito extends JDialog {
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						dispose();//sirve para cerrar la ventana actual
-						MenuUsuario usuario = new MenuUsuario();
-						usuario.setVisible(true);
+						MenuUsuario user = new MenuUsuario(usuario);
+						user.setVisible(true);
 					}
 				});
 				okButton.setActionCommand("OK");
